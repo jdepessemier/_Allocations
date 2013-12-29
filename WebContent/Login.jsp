@@ -29,10 +29,10 @@
   			<button type="submit" class="btn btn-primary btn-small pull-right"> <i class="icon-user icon-white"></i> Login</button> 
 		</form>
 	</div>
-    <div class="span6">
+    <div class="span5">
     	<br></br>
     	<br></br>
-    	<p> Please enter your login and password to access the <strong>CIRB Projects Allocations Management</strong> Site. 
+    	<p>Please enter your login and password to access the <strong>CIRB Projects Allocations Management</strong> Site. 
     	This is a private site reserved to registered users.</p>
     	<p>Please Contact CIRB to get access.</p>
     </div>
