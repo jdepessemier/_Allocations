@@ -28,8 +28,6 @@
 			<p><input type="text" class="span3" placeholder="Enter email" name="usermail" value="<c:out value="${user.userMail}" />" /></p>
 			<p><input type="text" class="span3" placeholder="Enter login" name="userlogin" value="<c:out value="${user.userLogin}" />" /></p>
 			<p><input type="password" class="span3" placeholder="Enter password" name="userpwd" value="<c:out value="${user.userPwd}" />" /></p>		
-  			<p><input type="text" class="span3" placeholder="Username" name="userlogin" value="<c:out value="${user.userLogin}" />" /></p>  
-  			<p><input type="password" class="span3" placeholder="Password" name="userpwd" value="<c:out value="${user.userPwd}" />" /></p>
   			<label></label>
   			<button type="submit" class="btn btn-primary btn-small pull-right"> <i class="icon-user icon-white"></i> Register</button> 
 		</form>

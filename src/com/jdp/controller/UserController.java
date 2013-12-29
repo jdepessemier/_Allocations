@@ -50,13 +50,9 @@ public class UserController extends HttpServlet {
                         	
                 User user =  dao.getUserByUserLogin(request.getParameter("userlogin"));
                 
-                if (myUser.getUserPwd().equals(user.getUserPwd())) {
-                	
+                if (myUser.getUserPwd().equals(user.getUserPwd())) {                	
                 	forward = SUCCESS;
-            	    //forward =  "/FileUpload.jsp";
-                	
                 } else {
-
                 	forward = ERROR;
                 }          		
             }

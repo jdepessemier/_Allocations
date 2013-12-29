@@ -1,22 +1,33 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE HTML>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Error Page</title>
-  <link rel="stylesheet" href="css/style.css">
-  <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<meta charset="utf-8">
+<title>CIRB - Project Allocations</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
 </head>
-    <body>
-      <section class="container">
-	    <p>Registration is Successful.</p>
-	    <p>Please Login Here <a href='Login.jsp'>Go to Login</a></p>
-	  </section>
+	<body>
+		<div class="container">
+		  <div class="page-header">
+    		<div class="row">
+      			<div class="span3">
+      				<a href="http://www.cirb.irisnet.be" target="_blank"><img alt="CIRB" src="https://irisbox.irisnet.be/resources/img/cirb-brussels.png" class="pull-right"></a>
+      			</div>
+      			<div class="span9">
+        			<h1>Projects Allocations Management</h1>
+      			</div>
+    		</div>
+  		  </div>
+		  <div class="alert-info">
+    	  	<div class="row">
+      			<div class="span12">
+				    <p>Registration is Successful.</p>
+				    <p>Please Login Here <a href='Login.jsp'>Go to Login</a></p>
+	    		</div>
+	    	</div>
+	      </div>
+	    </div>		
     </body>
 </html>
 
