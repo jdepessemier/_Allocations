@@ -19,9 +19,8 @@ public class UserController extends HttpServlet {
 	
     private static final long serialVersionUID = 1L;
     
-    private static String WELCOME = "/Welcome.jsp";
     private static String ERROR = "/Error.jsp";
-    private static String SUCCESS = "/Success.jsp";
+    private static String SUCCESS = "/Home.jsp";
     
     private UserDao dao;
 
@@ -29,6 +28,37 @@ public class UserController extends HttpServlet {
         super();
         dao = new UserDao();
     }
+    
+     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+        String forward="";
+        String action = request.getParameter("action");       
+            
+        if (action.equalsIgnoreCase("listEmployee")){
+            
+        	List<Employee> employeesList = dao.getAllEmployees();
+	           
+    	    forward =  "/ListEmployees.jsp";
+    	    request.setAttribute("employees", employeesList);
+    	    
+        } else if (action.equalsIgnoreCase("listUser")){
+        	
+        	List<User> usersList = dao.getAllUsers();
+            
+    	    forward =  "/ListUsers.jsp";
+
+    	    request.setAttribute("users", usersList);
+    	    
+        } else {
+        	
+            forward = ERROR;
+        }
+        
+    	RequestDispatcher view = request.getRequestDispatcher(forward);
+        view.forward(request, response);
+
+    }
+    
 
      protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
@@ -68,13 +98,13 @@ public class UserController extends HttpServlet {
             
             dao.addUser(user);
             
-            forward = WELCOME;
+            forward = SUCCESS;
             
         } else if (action.equalsIgnoreCase("listUser")){
         	
         	List<User> usersList = dao.getAllUsers();
             
-    	    forward =  "/New.jsp";
+    	    forward =  "/ListUsers.jsp";
 
     	    request.setAttribute("users", usersList);
     	    
@@ -82,7 +112,7 @@ public class UserController extends HttpServlet {
         	      	
         	List<Employee> employeesList = dao.getAllEmployees();
         	           
-    	    forward =  "/New1.jsp";
+    	    forward =  "/ListEmployees.jsp";
 
     	    request.setAttribute("employees", employeesList);
     	    
