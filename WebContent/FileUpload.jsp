@@ -1,26 +1,56 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
-<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Login Form</title>
-  <link rel="stylesheet" href="css/style.css">
-  <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<meta charset="utf-8">
+<title>CIRB - Project Allocations</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
 </head>
 <body>
-  <section class="container"> 
-        <div class="login">
-            <h1> Choose File to Upload in Server </h1>
-            <form action="upload" method="post" enctype="multipart/form-data">
-                <p><input type="file" name="file" /></p>
-                <p><input type="submit" value="Upload File Data" /></p>
+<div class="container">
+    <div class="row">
+      <div class="span3">
+      	<a href="http://www.cirb.irisnet.be" target="_blank"><img alt="CIRB" src="https://irisbox.irisnet.be/resources/img/cirb-brussels.png" class="pull-right"></a>
+      </div>
+      <div class="span9">
+        <h2>Projects Allocations Management</h2>
+      </div>
+    </div>
+    <div class="row">
+    	<div class="tabbable"> 
+    		<ul class="nav nav-tabs">
+      			<li class="dropdown" onclick="location.href='Home.jsp';"><a data-toggle="tab">Home</a></li>
+      			<li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Users Management <b class="caret"></b> </a>
+        			<ul class="dropdown-menu">
+      					<li class="dropdown"><a href='#' onclick='invokeServlet("UserController?action=listUser")' data-toggle="tab">List Users</a></li>
+      					<li class="dropdown"><a href='#' onclick='invokeServlet("UserController?action=listEmployee")' data-toggle="tab">List Employees</a></li>
+        			</ul>
+      			</li>	
+     			<li onclick="location.href='Registration.jsp';"><a data-toggle="tab">Register Users</a></li>
+    		</ul>
+		</div>  
+    </div>
+</div>
+<div class="container">
+  <div class="row">
+	<div class="span4 offset4">
+		<h3> Choose File :</h3>
+			<form class="well" id="formulaire" method="POST" action='upload' enctype="multipart/form-data">
+            	<p><input class="span3" type="file" name="file" /></p>
+                <button type="submit" class="btn btn-primary btn-small pull-right"> <i class="icon-file icon-white"></i> Upload File Data</button>
             </form>          
-        </div>
-  </section>
+    </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
+function invokeServlet(URL)
+{
+   location.href = URL;
+}
+</script>
+<script src="js/jquery.js"></script> 
+<script src="js/bootstrap.min.js"></script>   
 </body>
 </html>
