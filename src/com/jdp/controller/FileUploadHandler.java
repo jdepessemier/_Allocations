@@ -32,56 +32,66 @@ public class FileUploadHandler extends HttpServlet {
     }
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-	   
-		ServletFileUpload upload = new ServletFileUpload();
 		
-		try {
-			FileItemIterator it = upload.getItemIterator(request);
-			FileItemStream item = it.next();
+        String action = request.getParameter("action"); 
+        
+        if (action.equalsIgnoreCase("uploadEmployees")){
+        	
+    		ServletFileUpload upload = new ServletFileUpload();
+    		
+    		try {
+    			FileItemIterator it = upload.getItemIterator(request);
+    			FileItemStream item = it.next();
 
-	        InputStream stream = item.openStream();
-	        
-	        try {
-	            InputStreamReader inputStreamReader = new InputStreamReader(stream, "ISO-8859-1");
-	            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-	            bufferedReader.readLine();
-	            String line;
+    	        InputStream stream = item.openStream();
+    	        
+    	        try {
+    	            InputStreamReader inputStreamReader = new InputStreamReader(stream, "ISO-8859-1");
+    	            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+    	            bufferedReader.readLine();
+    	            String line;
 
-	            while ((line = bufferedReader.readLine()).charAt(0) != ';') {
-	            	
-	            	List<String> itemList = getItemsOfLine(line);
-	            	
-	                String employeeDpt = itemList.get(0);
-	                employeeDpt = StringUtil.trimLeft(employeeDpt);
-	                employeeDpt = StringUtil.trimRight(employeeDpt);
-	                
-	                String employeeSvc = itemList.get(1);
-	                employeeSvc = StringUtil.trimLeft(employeeSvc);
-	                employeeSvc = StringUtil.trimRight(employeeSvc);
-	                
-	                String employeeNme = itemList.get(2);
-	                employeeNme = StringUtil.trimLeft(employeeNme);
-	                employeeNme = StringUtil.trimRight(employeeNme);
-	                               
-	                Employee newEmployee = new Employee();
-	                
-	                newEmployee.setEmployeeDepartment(employeeDpt);
-	                newEmployee.setEmployeeService(employeeSvc);
-	                newEmployee.setEmployeeName(employeeNme);
-	                
-	                dao.addEmployee(newEmployee);
-
-	            }
-	        } finally {
-	            stream.close();
-	            request.getRequestDispatcher("/UserController?action=listUser").forward(request, response);
-	        }
-	        
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		} 		
+    	            while ((line = bufferedReader.readLine()).charAt(0) != ';') {
+    	            	
+    	            	List<String> itemList = getItemsOfLine(line);
+    	            	
+    	                String employeeDpt = itemList.get(0);
+    	                employeeDpt = StringUtil.trimLeft(employeeDpt);
+    	                employeeDpt = StringUtil.trimRight(employeeDpt);
+    	                
+    	                String employeeSvc = itemList.get(1);
+    	                employeeSvc = StringUtil.trimLeft(employeeSvc);
+    	                employeeSvc = StringUtil.trimRight(employeeSvc);
+    	                
+    	                String employeeNme = itemList.get(2).toUpperCase();
+    	                employeeNme = StringUtil.trimLeft(employeeNme);
+    	                employeeNme = StringUtil.trimRight(employeeNme);
+    	                
+    	                if (employeeSvc.equals("Svc. IS")|employeeSvc.equals("Svc. WAP") ) {
+    	                
+    		                Employee newEmployee = new Employee();
+    		                
+    		                newEmployee.setEmployeeDepartment(employeeDpt);
+    		                newEmployee.setEmployeeService(employeeSvc);
+    		                newEmployee.setEmployeeName(employeeNme);
+    		                
+    		                dao.addEmployee(newEmployee);
+    	               
+    	                }
+    	            }
+    	        } finally {
+    	            stream.close();
+    	            request.getRequestDispatcher("/UserController?action=listUser").forward(request, response);
+    	        }
+    	        
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		} catch (FileUploadException e) {
+    			e.printStackTrace();
+    		} 		
+    		
+        }
+	   
    }
    
    private List<String> getItemsOfLine(String line) {

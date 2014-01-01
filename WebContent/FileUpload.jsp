@@ -36,7 +36,7 @@
   <div class="row">
 	<div class="span4 offset4">
 		<h3> Choose File :</h3>
-			<form class="well" id="formulaire" method="POST" action='upload' enctype="multipart/form-data">
+			<form class="well" id="formulaire" method="POST" action='upload?action=uploadEmployees' enctype="multipart/form-data">
             	<p><input class="span3" type="file" name="file" /></p>
                 <button type="submit" class="btn btn-primary btn-small pull-right"> <i class="icon-file icon-white"></i> Upload File Data</button>
             </form>          
