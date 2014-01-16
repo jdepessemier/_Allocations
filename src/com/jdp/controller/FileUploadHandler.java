@@ -18,6 +18,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.jdp.dao.UserDao;
+import com.jdp.model.AllocationData;
 import com.jdp.model.Employee;
 import com.jdp.util.StringUtil;
 
@@ -26,6 +27,8 @@ public class FileUploadHandler extends HttpServlet {
 	
     private UserDao dao;
     
+    private static int CURRENT_YEAR = 2014;
+    
     public FileUploadHandler() {
         super();
         dao = new UserDao();
@@ -33,7 +36,8 @@ public class FileUploadHandler extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		
-        String action = request.getParameter("action"); 
+        String action = request.getParameter("action");
+
         
         if (action.equalsIgnoreCase("uploadEmployees")){
         	
@@ -53,7 +57,7 @@ public class FileUploadHandler extends HttpServlet {
 
     	            while ((line = bufferedReader.readLine()).charAt(0) != ';') {
     	            	
-    	            	List<String> itemList = getItemsOfLine(line);
+    	            	List<String> itemList = getItemsOfLine(line,3);
     	            	
     	                String employeeDpt = itemList.get(0);
     	                employeeDpt = StringUtil.trimLeft(employeeDpt);
@@ -91,13 +95,121 @@ public class FileUploadHandler extends HttpServlet {
     		} 		
     		
         }
+        
+        if (action.equalsIgnoreCase("uploadAllocations")){
+        	
+    		ServletFileUpload upload = new ServletFileUpload();
+    		
+    		try {
+    			FileItemIterator it = upload.getItemIterator(request);
+    			FileItemStream item = it.next();
+
+    	        InputStream stream = item.openStream();
+    	        
+    	        try {
+    	            InputStreamReader inputStreamReader = new InputStreamReader(stream, "ISO-8859-1");
+    	            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+    	            bufferedReader.readLine();
+    	            String line;
+
+    	            while ((line = bufferedReader.readLine()).charAt(0) != ';') {
+    	            	
+    	            	List<String> itemList = getItemsOfLine(line,6);
+    	            	
+    	                String personFullName = itemList.get(0).toUpperCase();
+    	                personFullName = StringUtil.trimLeft(personFullName);
+    	                personFullName = StringUtil.trimRight(personFullName);
+    	                
+    	                String yearValue = itemList.get(1);
+    	                yearValue = StringUtil.trimLeft(yearValue);
+    	                yearValue = StringUtil.trimRight(yearValue);
+    	                int year = Integer.parseInt(yearValue); 
+    	                
+    	                String monthValue = itemList.get(2);
+    	                monthValue = StringUtil.trimLeft(monthValue);
+    	                monthValue = StringUtil.trimRight(monthValue);
+    	                int month = Integer.parseInt(monthValue);
+    	                
+    	                String missionType = itemList.get(3).toUpperCase();
+    	                personFullName = StringUtil.trimLeft(personFullName);
+    	                personFullName = StringUtil.trimRight(personFullName);
+    	                
+    	                
+    	                String missionName = itemList.get(4).toUpperCase();
+    	                missionName = StringUtil.trimLeft(missionName);
+    	                missionName = StringUtil.trimRight(missionName); 
+    	                
+    	                String activityName = itemList.get(5).toUpperCase();
+    	                activityName = StringUtil.trimLeft(activityName);
+    	                activityName = StringUtil.trimRight(activityName); 
+    	                
+    	                double workDays = round(Double.valueOf(itemList.get(6).replace(",", ".")),2);
+    	                
+    	                if (activityName.equalsIgnoreCase("TOTAL")){
+    	                	activityName = "Projets";
+    	                }
+
+    	                if (activityName.equalsIgnoreCase("ABSENCE")){
+    	                	activityName = "Congés & Absences";
+    	                }
+    	                
+    	                if (activityName.equalsIgnoreCase("OTHERS")){
+    	                	activityName = "Activités Hors Projets";
+    	                }
+    	                
+    	                if (activityName.equalsIgnoreCase("FORMATIONS")){
+    	                	activityName = "Formations";
+    	                }
+    	                
+    	                if (year == CURRENT_YEAR) {
+    	                	  	                	             
+    		                AllocationData newAllocationData = new AllocationData();
+    		                
+    		                newAllocationData = dao.getAllocationData(personFullName, 
+    		                										  missionName,
+    		                										  missionType,
+    		                										  activityName,
+    		                										  year,
+    		                										  month);
+    		                
+    		                if (!newAllocationData.getPersonFullName().isEmpty()) {
+    		                	
+    		                	newAllocationData.setWorkDays(workDays);
+    		                	dao.updateAllocationData(newAllocationData);
+    		                	
+    		                } else {		                	
+    		                	
+    		                	newAllocationData.setPersonFullName(personFullName);
+    		                	newAllocationData.setMissionName(missionName);
+    		                	newAllocationData.setMissionType(missionType);
+    		                	newAllocationData.setActivityName(activityName);
+    		                	newAllocationData.setYear(year);
+    		                	newAllocationData.setMonth(month);
+    		                	newAllocationData.setWorkDays(workDays);        	
+    		                	dao.addAllocationData(newAllocationData);
+    		                }	               
+    	                }
+    	            }
+    	        } finally {
+    	            stream.close();
+    	            request.getRequestDispatcher("/UserController?action=listUser").forward(request, response);
+    	        }
+    	        
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		} catch (FileUploadException e) {
+    			e.printStackTrace();
+    		}
+        	
+        	
+        }
 	   
    }
    
-   private List<String> getItemsOfLine(String line) {
+   private List<String> getItemsOfLine(String line, int nbOfItems ) {
    	
        List<String> itemList = new ArrayList<String>();
-       for (int i = 0; i < 3; i++) {
+       for (int i = 0; i < nbOfItems; i++) {
            int pointIndex = line.indexOf(";");
            String item = line.substring(0, pointIndex);
            itemList.add(item);
@@ -106,4 +218,9 @@ public class FileUploadHandler extends HttpServlet {
        itemList.add(line);
        return itemList;
    }
+   
+   public double round(double what, int howmuch) {
+   	return (double)( (int)(what * Math.pow(10,howmuch) + .5) ) / Math.pow(10,howmuch);
+   }
+   
 }

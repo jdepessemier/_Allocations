@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jdp.model.AllocationData;
 import com.jdp.model.Employee;
 import com.jdp.model.User;
 import com.jdp.util.DbUtil;
@@ -188,7 +189,82 @@ public class UserDao {
         return user;
     }
  
+    public AllocationData getAllocationData(String personfullname, 
+		    								String missionname,
+		    								String missiontype,
+		    								String activityname,
+		    								int year,
+		    								int month) {
+    	
+    	AllocationData allocationdata = new AllocationData();
+        try {
+            PreparedStatement preparedStatement = connection.
+                    prepareStatement("select * from allocation where personfullname=? AND " +
+									                    			"missionname=? AND " +
+									                    			"missiontype=? AND "  +
+									                    			"activityname=? AND " +
+									                    			"year=? AND " +
+									                    			"month=?");
+            
+            preparedStatement.setString(1, personfullname);
+            preparedStatement.setString(2, missionname);
+            preparedStatement.setString(3, missiontype);
+            preparedStatement.setString(4, activityname);
+            preparedStatement.setInt(5, year);
+            preparedStatement.setInt(6, month);
+            
+            ResultSet rs = preparedStatement.executeQuery();
 
+            if (rs.next()) {
+            	allocationdata.setAllocationId(rs.getInt("id"));
+            	allocationdata.setPersonFullName(rs.getString("personfullname"));
+            	allocationdata.setMissionName(rs.getString("missionname"));
+            	allocationdata.setMissionType(rs.getString("missiontype"));
+            	allocationdata.setActivityName(rs.getString("activityname"));
+            	allocationdata.setYear(rs.getInt("year"));
+            	allocationdata.setMonth(rs.getInt("month"));
+            	allocationdata.setWorkDays(rs.getDouble("workdays"));
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	
+    	return allocationdata;
+    }
 
+    public void addAllocationData(AllocationData allocationdata) {
+        try {
+        	
+            PreparedStatement preparedStatement = connection
+            		.prepareStatement("insert into allocation(personfullname,missionname,missiontype,activityname,year,month,workdays) values (?,?,?,?,?,?,?)");
+            // Parameters start with 1
+            preparedStatement.setString(1, allocationdata.getPersonFullName());
+            preparedStatement.setString(2, allocationdata.getMissionName());
+            preparedStatement.setString(3, allocationdata.getMissionTypee());
+            preparedStatement.setString(4, allocationdata.getActivityName());
+            preparedStatement.setInt(5, allocationdata.getYear());
+            preparedStatement.setInt(6, allocationdata.getMonth());
+            preparedStatement.setDouble(7, allocationdata.getWorkDays());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateAllocationData(AllocationData allocationdata) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update allocation set workdays=? where id=?");
+            // Parameters start with 1
+            preparedStatement.setDouble(1, allocationdata.getWorkDays());
+            preparedStatement.setInt(2, allocationdata.getAllocationId());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
 }
