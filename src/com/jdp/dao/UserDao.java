@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.jdp.model.AllocationData;
 import com.jdp.model.Employee;
+import com.jdp.model.SnapshotData;
 import com.jdp.model.User;
 import com.jdp.util.DbUtil;
 
@@ -265,6 +266,61 @@ public class UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void addSnapshotData(SnapshotData snapshotdata) {
+        try {
+        	
+            PreparedStatement preparedStatement = connection
+            		.prepareStatement("insert into snapshot(CAProjet,LibelleProjet,Director,ProjectManager,year,TypeInput,DocumentNb,Comment,Date,Montant) values (?,?,?,?,?,?,?,?,?,?)");
+            // Parameters start with 1
+            preparedStatement.setString(1, snapshotdata.getCAProjet());
+            preparedStatement.setString(2, snapshotdata.getLibelleProjet());
+            preparedStatement.setString(3, snapshotdata.getDirector());
+            preparedStatement.setString(4, snapshotdata.getProjectManager());
+            preparedStatement.setInt(5, snapshotdata.getYear());
+            preparedStatement.setString(6, snapshotdata.getTypeInput());
+            preparedStatement.setString(7, snapshotdata.getDocumentNb());
+            preparedStatement.setString(8, snapshotdata.getComment());
+            preparedStatement.setString(9, snapshotdata.getDate());
+            preparedStatement.setDouble(10, snapshotdata.getMontant());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public List<SnapshotData> getAllSnapshotData() {
+    	
+        List<SnapshotData> snapshotdatas = new ArrayList<SnapshotData>();
+        
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select Id,CAProjet,LibelleProjet,Director,ProjectManager,year,TypeInput,DocumentNb,Comment,Date,Montant from snapshot");
+            while (rs.next()) {
+            	
+                SnapshotData data = new SnapshotData();
+                
+                data.setSnapshotId(rs.getInt("Id"));
+                data.setCAProjet(rs.getString("CAProjet"));
+                data.setLibelleProjet(rs.getString("LibelleProjet"));
+                data.setDirector(rs.getString("Director"));
+                data.setProjectManager(rs.getString("ProjectManager"));
+                data.setYear(rs.getInt("year"));
+                data.setTypeInput(rs.getString("TypeInput"));
+                data.setDocumentNb(rs.getString("DocumentNb"));
+                data.setComment(rs.getString("Comment"));
+                data.setDate(rs.getString("Date"));
+                data.setMontant(rs.getDouble("Montant"));
+
+                snapshotdatas.add(data);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return snapshotdatas;
     }
     
 }
